@@ -34,7 +34,7 @@ const patronSchema = new mongoose.Schema(
         },
 
         tags: {
-            // Libellé des tag
+            // Libellé des tags
             type: [String],
             required: true,
             lowercase: true,

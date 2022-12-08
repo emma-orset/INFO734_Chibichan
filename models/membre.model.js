@@ -1,7 +1,8 @@
-const { notStrictEqual } = require("assert")
 const mongoose = require("mongoose")
+const bcrypt = require("bcrypt")
 const { isEmail } = require("validator")
-const { boolean } = require("webidl-conversions")
+
+
 const membreSchema = new mongoose.Schema(
     {
         pseudo: {
@@ -38,9 +39,9 @@ const membreSchema = new mongoose.Schema(
         },
 
         admin: {
-            type: boolean,
+            type: Boolean,
             required: true,
-            default:false,
+            default: false,
         },
 
         favoris: {
@@ -63,6 +64,13 @@ const membreSchema = new mongoose.Schema(
         timestamps: true,
     }
 )
+
+// fonction qui va s'executer avant de save en base de données
+membreSchema.pre("save", async function(next){
+    const salt = await bcrypt.genSalt()
+    this.mdp = await bcrypt.hash(this.mdp, salt)
+    next()
+})
 
 const MembreModel = mongoose.model("membre", membreSchema);
 
