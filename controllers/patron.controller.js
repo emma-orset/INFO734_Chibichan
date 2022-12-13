@@ -1,1 +1,0 @@
-// Toutes les actions sur les patrons

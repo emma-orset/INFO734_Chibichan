@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt")
 const { isEmail } = require("validator")
 
 
-const membreSchema = new mongoose.Schema(
+const memberSchema = new mongoose.Schema(
     {
         pseudo: {
             type: String,
@@ -20,14 +20,14 @@ const membreSchema = new mongoose.Schema(
             trim: true,
         },
 
-        mdp: {
+        pwd: {
             type: String,
             required: true,
             minLength: 6,
             max:1024,
         },
 
-        image: {
+        picture: {
             // Chemin image de profil
             type: String,
             // Image par défaut :
@@ -44,18 +44,18 @@ const membreSchema = new mongoose.Schema(
             default: false,
         },
 
-        favoris: {
+        favorites: {
             // id des patrons mis en favori
             type: [String]
         },
 
         likes: {
-            // id des commentaires aimé par ce membre
+            // id des commentaires aimé par ce member
             type: [String]
         },
 
-        commentaires: {
-            // Identifiants des commentaires écrits par ce membre
+        comments: {
+            // Identifiants des commentaires écrits par ce member
             type: [String]
         }
 
@@ -66,12 +66,24 @@ const membreSchema = new mongoose.Schema(
 )
 
 // fonction qui va s'executer avant de save en base de données
-membreSchema.pre("save", async function(next){
+memberSchema.pre("save", async function(next){
     const salt = await bcrypt.genSalt()
-    this.mdp = await bcrypt.hash(this.mdp, salt)
+    this.pwd = await bcrypt.hash(this.pwd, salt)
     next()
 })
 
-const MembreModel = mongoose.model("membre", membreSchema);
+memberSchema.statics.login = async function(email, pwd){
+    const member = await this.findOne({email});
+    if(member){
+        const auth = await bcrypt.compare(pwd, member.pwd);
+        if(auth){
+            return member;
+        }
+        throw Error('Incorrect password')
+    }
+    throw Error("Incorrect email")
+}
 
-module.exports = MembreModel;
+const MemberModel = mongoose.model("member", memberSchema);
+
+module.exports = MemberModel;

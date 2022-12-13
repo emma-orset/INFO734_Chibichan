@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
-const patronSchema = new mongoose.Schema(
+const patternSchema = new mongoose.Schema(
     {
-        titre: {
+        title: {
             type: String,
             required: true,
         },
@@ -12,7 +12,7 @@ const patronSchema = new mongoose.Schema(
             required: true,
         },
 
-        image: {
+        picture: {
             // Chemin de l'image
             type: String,
             required: true,
@@ -41,7 +41,12 @@ const patronSchema = new mongoose.Schema(
 
         },
 
-        commentaires: {
+        favorites:{
+            // identifiants des membres qui ont mis le patron en favori
+            type:[String],
+        },
+
+        comments: {
             // identifiants des commentaires
             type:[String],
         }
@@ -53,6 +58,6 @@ const patronSchema = new mongoose.Schema(
     }
 )
 
-const PatronModel = mongoose.model("patron", patronSchema);
+const PatternModel = mongoose.model("pattern", patternSchema);
 
-module.exports = PatronModel;
+module.exports = PatternModel;

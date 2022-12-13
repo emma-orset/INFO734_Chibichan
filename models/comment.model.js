@@ -1,17 +1,17 @@
 const mongoose = require("mongoose")
-const commentaireSchema = new mongoose.Schema(
+const commentSchema = new mongoose.Schema(
     {
-        texte: {
+        text: {
             type: String,
             required: true,
         },
 
-        images: {
+        pictures: {
             // Chemin des images
             type: [String]
         },
 
-        redacteur: {
+        writer: {
             // Identifiant du membre qui a écrit le commentaire
             type: String,
             required: true,
@@ -22,7 +22,7 @@ const commentaireSchema = new mongoose.Schema(
             type: [String]
         },
 
-        commentaires: {
+        comments: {
             // Identifiants des commentaires de ce commentaire
             type: [String]
         }
@@ -34,6 +34,6 @@ const commentaireSchema = new mongoose.Schema(
     }
 )
 
-const CommentaireModel = mongoose.model("commentaire", commentaireSchema);
+const CommentModel = mongoose.model("comment", commentSchema);
 
-module.exports = CommentaireModel;
+module.exports = CommentModel;
