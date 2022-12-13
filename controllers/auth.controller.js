@@ -1,4 +1,4 @@
-//Seulement pour l'inscription (signup), la connexion (login) et la déconnexion de l'utilisateur (logout)
+//Seulement pour l'inscription (signup), la connexion (login) et la déconnexion du membre (logout)
 const MembreModel = require("../models/membre.model");
 
 module.exports.signUp = async (req, res) => {

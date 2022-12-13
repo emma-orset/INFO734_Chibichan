@@ -1,0 +1,1 @@
+//Pour toutes les actions sur membre sauf inscription/connexion/deconnexion
