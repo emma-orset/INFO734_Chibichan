@@ -1,7 +1,8 @@
 //Seulement pour l'inscription (signup), la connexion (login) et la déconnexion du member (logout)
 const MemberModel = require("../models/member.model");
 const jwt = require("jsonwebtoken");
-const maxAge = 3 * 24 * 60 * 1000 
+const {signUpErrors, signInErrors} = require('../utils/errors.utils')
+const maxAge = 3 * 24 * 60 * 1000;
 
 const createToken = (id) => {
     return jwt.sign({id}, process.env.TOKEN_SECRET, {
@@ -19,7 +20,8 @@ module.exports.signUp = async (req, res) => {
     }
 
     catch(err){
-        res.status(200).send({ err })
+        const errors = signUpErrors(err)
+        res.status(200).send({ errors })
     }
 }
 
@@ -34,7 +36,8 @@ module.exports.signIn = async (req, res) => {
     }
 
     catch(err){
-        res.status(200).json(err)
+        const errors = signInErrors(err)
+        res.status(200).json({errors})
     }
 }
 

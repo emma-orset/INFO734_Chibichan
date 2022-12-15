@@ -23,8 +23,7 @@ const memberSchema = new mongoose.Schema(
         pwd: {
             type: String,
             required: true,
-            minLength: 6,
-            max:1024,
+            minlength: 6,
         },
 
         picture: {
@@ -49,7 +48,7 @@ const memberSchema = new mongoose.Schema(
             type: [String]
         },
 
-        likes: {
+        likers: {
             // id des commentaires aimé par ce member
             type: [String]
         },

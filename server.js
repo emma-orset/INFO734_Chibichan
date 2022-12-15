@@ -3,7 +3,6 @@ const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 const memberRoutes = require('./routes/member.routes')
 const patternRoutes = require('./routes/pattern.routes')
-const commentRoutes = require('./routes/comment.routes')
 require('dotenv').config({path: './config/.env'});
 require("./config/db")
 const {checkMember, requireAuth} = require('./middleware/auth.middleware')
@@ -22,7 +21,6 @@ app.get("/jwtid", requireAuth, (req, res) => {
 //routes
 app.use('/api/member', memberRoutes)
 app.use('/api/pattern', patternRoutes)
-app.use('/api/comment', commentRoutes)
 
 // server
 app.listen(process.env.PORT, () => {

@@ -22,11 +22,13 @@ const patternSchema = new mongoose.Schema(
             // Chemin du pdf
             type: String,
             required: true,
+            unique: true,
         },
 
         word: {
             // Chemin du word
             type: String,
+            unique: true,
         },
 
         description: {
@@ -47,11 +49,15 @@ const patternSchema = new mongoose.Schema(
         },
 
         comments: {
-            // identifiants des commentaires
-            type:[String],
-        }
-
-
+            type: [{
+                commenterId:String,
+                commenterPseudo: String,
+                text: String,
+                images:[String],
+                likers:[String],
+                timestamps: Number,
+            }]
+        },
     },
     {
         timestamps: true,

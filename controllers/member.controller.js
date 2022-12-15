@@ -2,7 +2,6 @@
 
 const MemberModel = require('../models/member.model');
 const PatternModel = require('../models/pattern.model');
-const CommentModel = require('../models/comment.model');
 const ObjectID = require('mongoose').Types.ObjectId;
 
 

@@ -1,5 +1,6 @@
 // Toutes les actions sur les patterns
 const PatternModel = require("../models/pattern.model");
+const {addPatternErrors} = require('../utils/errors.utils')
 
 module.exports.addPattern = async (req, res) => {
     const {title, type, picture, pdf, word, description, tags} = req.body
@@ -10,7 +11,8 @@ module.exports.addPattern = async (req, res) => {
     }
 
     catch(err){
-        res.status(200).send({ err })
+        const errors = addPatternErrors(err)
+        res.status(200).json({errors})
     }
 }
 
