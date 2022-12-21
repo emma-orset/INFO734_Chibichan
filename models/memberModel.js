@@ -30,11 +30,12 @@ const memberSchema = new mongoose.Schema(
             // Chemin image de profil
             type: String,
             // Image par défaut :
-            default: "./uploads/profil/random_user.png"
+            default: "random_member.png"
         },
 
         bio: {
             type: String,
+            default: ""
         },
 
         admin: {
@@ -43,20 +44,15 @@ const memberSchema = new mongoose.Schema(
             default: false,
         },
 
-        favorites: {
+        patternLikes: {
             // id des patrons mis en favori
             type: [String]
         },
 
-        likers: {
+        commentLikes: {
             // id des commentaires aimé par ce member
             type: [String]
         },
-
-        comments: {
-            // Identifiants des commentaires écrits par ce member
-            type: [String]
-        }
 
     },
     {
@@ -71,8 +67,9 @@ memberSchema.pre("save", async function(next){
     next()
 })
 
+
 memberSchema.statics.login = async function(email, pwd){
-    const member = await this.findOne({email});
+    const member = await this.findOne({email : email});
     if(member){
         const auth = await bcrypt.compare(pwd, member.pwd);
         if(auth){
@@ -82,6 +79,8 @@ memberSchema.statics.login = async function(email, pwd){
     }
     throw Error("Incorrect email")
 }
+
+
 
 const MemberModel = mongoose.model("member", memberSchema);
 

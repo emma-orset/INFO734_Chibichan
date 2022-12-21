@@ -6,7 +6,7 @@ Ce qu'on a déjà fait :
 Installer node.js : https://nodejs.org/en/download/
 
 Lancer (à la racine du projet) : npm install -y
-Puis lancer : npm i --save express nodemon dotenv mongoose body-parser bcrypt jsonwebtoken cookie-parser
+Puis lancer : npm i --save express nodemon dotenv mongoose body-parser bcrypt jsonwebtoken cookie-parser uuidv4 multer@2.0.0-rc.1 path
 
 Pour lancer le serveur : npm start
 

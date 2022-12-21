@@ -1,6 +1,13 @@
 const mongoose = require("mongoose")
 const patternSchema = new mongoose.Schema(
     {
+        idCustom: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+        },
+
         title: {
             type: String,
             required: true,
@@ -15,24 +22,24 @@ const patternSchema = new mongoose.Schema(
         picture: {
             // Chemin de l'image
             type: String,
-            required: true,
+            required : true
         },
 
         pdf: {
             // Chemin du pdf
             type: String,
-            required: true,
-            unique: true,
+            required : true
         },
 
         word: {
             // Chemin du word
             type: String,
-            unique: true,
+            default:""
         },
 
         description: {
             type: String,
+            default:""
         },
 
         tags: {
@@ -43,20 +50,14 @@ const patternSchema = new mongoose.Schema(
 
         },
 
-        favorites:{
+        likers:{
             // identifiants des membres qui ont mis le patron en favori
             type:[String],
         },
 
         comments: {
-            type: [{
-                commenterId:String,
-                commenterPseudo: String,
-                text: String,
-                images:[String],
-                likers:[String],
-                timestamps: Number,
-            }]
+            // identifiants des commentaires liés au pattern
+            type: [String]
         },
     },
     {

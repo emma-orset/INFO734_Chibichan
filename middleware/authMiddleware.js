@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const MemberModel = require("../models/member.model");
+const MemberModel = require("../models/memberModel");
 
 module.exports.checkMember = (req, res, next) => {
     const token = req.cookies.jwt;
@@ -38,3 +38,4 @@ module.exports.requireAuth = (req, res, next) => {
     }
 
 }
+
