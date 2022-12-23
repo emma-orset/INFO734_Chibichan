@@ -6,22 +6,21 @@ module.exports.getDate = () => {
   const month = today.getMonth() + 1;
   const day = today.getDate();
 
-
   return `${year}${month}${day}`;
 };
 
 module.exports.getDateSpe = function (date) {
   // Date de type : '01 Jan 1970 00:00:01'
-  const today = new Date (Date.parse(date));
+  const today = new Date(Date.parse(date));
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
   const day = today.getDate();
   const hours = today.getHours();
-  const minutes = today.getMinutes()
-  const seconds = today.getSeconds()
+  const minutes = today.getMinutes();
+  const seconds = today.getSeconds();
 
   return `${year}${month}${day}${hours}${minutes}${seconds}`;
-}
+};
 
 module.exports.verifPicture = function (file, res) {
   try {

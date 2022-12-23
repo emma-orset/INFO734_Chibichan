@@ -176,8 +176,8 @@ module.exports.updatePattern = async (req, res) => {
       data.idCustom !== undefined
     ) {
       fs.renameSync(
-        "./public/clients/uploads/patternPicture/" + picture,
-        "./public/clients/uploads/patternPicture/" +
+        "./client/public/uploads/patternPicture/" + picture,
+        "./client/public/uploads/patternPicture/" +
           data.idCustom +
           date +
           path.extname(picture)
@@ -194,8 +194,8 @@ module.exports.updatePattern = async (req, res) => {
       data.idCustom !== undefined
     ) {
       fs.renameSync(
-        "./public/clients/uploads/patternPDF/" + pdf,
-        "./public/clients/uploads/patternPDF/" +
+        "./client/public/uploads/patternPDF/" + pdf,
+        "./client/public/uploads/patternPDF/" +
           data.idCustom +
           date +
           path.extname(pdf)
@@ -213,8 +213,8 @@ module.exports.updatePattern = async (req, res) => {
       data.idCustom !== undefined
     ) {
       fs.renameSync(
-        "./public/clients/uploads/patternWord/" + word,
-        "./public/clients/uploads/patternWord/" +
+        "./client/public/uploads/patternWord/" + word,
+        "./client/public/uploads/patternWord/" +
           data.idCustom +
           date +
           path.extname(word)
@@ -233,7 +233,7 @@ module.exports.updatePattern = async (req, res) => {
     if (data.deleteTags === "yes") tags = [];
     if (data.deleteWord === "yes") word = "";
     if (data.tags !== "" && data.tags !== undefined)
-      tags = tags.concat(data.tags.split(","))
+      tags = tags.concat(data.tags.split(","));
     if (tags.length === 0) throw Error("tags required");
 
     // On vérifie que le type est bon
@@ -278,21 +278,20 @@ module.exports.updatePattern = async (req, res) => {
       req.files["pdf"] !== undefined &&
       req.files["pdf"][0].fieldname === "pdf"
     )
-      pdf =
-        idCustom + date + path.extname(req.files["pdf"][0].originalname);
+      pdf = idCustom + date + path.extname(req.files["pdf"][0].originalname);
 
     if (
       req.files["picture"] !== undefined &&
       req.files["picture"][0].fieldname === "picture"
     )
       picture =
-        idCustom +
-        date +
-        path.extname(req.files["picture"][0].originalname);
+        idCustom + date + path.extname(req.files["picture"][0].originalname);
 
-    if (req.files["word"] !== undefined && req.files["word"][0].fieldname === "word") {
-      word =
-        idCustom + date + path.extname(req.files["word"][0].originalname);
+    if (
+      req.files["word"] !== undefined &&
+      req.files["word"][0].fieldname === "word"
+    ) {
+      word = idCustom + date + path.extname(req.files["word"][0].originalname);
     }
 
     await PatternModel.findOneAndUpdate(

@@ -40,12 +40,12 @@ module.exports.signInErrors = (err) => {
 
 module.exports.addPatternErrors = (err) => {
   let errors = {
-    idCustom:"",
+    idCustom: "",
     title: "",
     type: "",
     tags: "",
     file: "",
-    error:""
+    error: "",
   };
 
   if (err.code === 11000 && Object.keys(err.keyValue)[0].includes("idCustom")) {
@@ -73,24 +73,23 @@ module.exports.addPatternErrors = (err) => {
   }
 
   if (err.message.includes("miss arg"))
-    errors.error = "Un argument requis est manquant (idCustom ? title ? type ? picture ? pdf ? tags ?";
+    errors.error =
+      "Un argument requis est manquant (idCustom ? title ? type ? picture ? pdf ? tags ?";
 
-    if (err.message.includes("tags required"))
+  if (err.message.includes("tags required"))
     errors.tags = "Merci de mettre au moins un tag";
 
-    if (err.message.includes("max size"))
+  if (err.message.includes("max size"))
     errors.file = "Un des fichiers est trop volumineux (>1Go)";
 
-    if (err.message.includes("invalid file"))
+  if (err.message.includes("invalid file"))
     errors.file = "Un fichier n'est pas du bon type";
-
-
 
   return errors;
 };
 
 module.exports.uploadErrors = (err) => {
-  let errors = { format: "", maxSize: "", error:"" };
+  let errors = { format: "", maxSize: "", error: "" };
 
   if (err.message.includes("invalid file"))
     errors.format = "Format incompatible";
@@ -98,8 +97,9 @@ module.exports.uploadErrors = (err) => {
   if (err.message.includes("max size"))
     errors.maxSize = "Le fichier dépasse 1Mo";
 
-    if (err.message.includes("miss arg"))
-    errors.error = "Un argument requis est manquant (idCustom ? title ? type ? picture ? pdf ? tags ?";
+  if (err.message.includes("miss arg"))
+    errors.error =
+      "Un argument requis est manquant (idCustom ? title ? type ? picture ? pdf ? tags ?";
 
   return errors;
 };

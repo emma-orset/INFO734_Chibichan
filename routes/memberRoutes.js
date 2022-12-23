@@ -8,7 +8,7 @@ const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `${__dirname}/../public/clients/uploads/memberPicture/`);
+    cb(null, `${__dirname}/../client/public/uploads/memberPicture/`);
   },
   filename: async (req, file, cb) => {
     // On récupère les data passées dans le formulaire
@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     // Si un nouveau pseudo est passé dans le formulaire, on l'utilise
     if (data.pseudo !== undefined) pseudo = data.pseudo;
 
-    const fileName = pseudo + path.extname(file.originalname)
+    const fileName = pseudo + path.extname(file.originalname);
 
     cb(null, fileName);
   },
@@ -40,13 +40,13 @@ router.get("/signOut", authController.signOut);
 // member
 router.get("/", memberController.getAllMembers);
 router.get("/:id", memberController.memberInfo);
-router.put("/:id", upload.single("picture"),memberController.updateMember);
+router.put("/:id", upload.single("picture"), memberController.updateMember);
 router.delete("/:id", memberController.deleteMember);
 
 //upload
 // router.post(
 //   "/upload/:id",
-  
+
 //   uploadController.uploadMemberPicture
 // );
 

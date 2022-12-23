@@ -40,7 +40,11 @@ module.exports.addComment = async (req, res) => {
 
       // On lui donne un nom
       let fileName =
-        data.writer + data.idPattern + "-" + getDateSpe(data.date) + file.originalname;
+        data.writer +
+        data.idPattern +
+        "-" +
+        getDateSpe(data.date) +
+        file.originalname;
 
       // On l'ajoute au tableau des images
       listPictures.push(fileName);
@@ -51,7 +55,7 @@ module.exports.addComment = async (req, res) => {
       writer: data.writer,
       idPattern: data.idPattern,
       pictures: listPictures,
-      date : data.date
+      date: data.date,
     });
 
     // On cherche le patron lié au commentaire
@@ -109,16 +113,16 @@ module.exports.updateComment = async (req, res) => {
     let pictures = comment.pictures;
 
     // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
-    
+
     if (data.text !== "") text = data.text;
 
     // Si le membre a cliqué sur le bouton "supprimer les photos"
-    if (data.deletePictures === "yes"){
-      pictures = []
+    if (data.deletePictures === "yes") {
+      pictures = [];
     }
 
     // Si on reçoit des images
-    if (req.files.length !== 0 ) {
+    if (req.files.length !== 0) {
       // On parcourt chaque image passé en paramètre
       req.files.forEach((file) => {
         // On vérifie que c'est bien une image
@@ -138,9 +142,9 @@ module.exports.updateComment = async (req, res) => {
     }
 
     // S'il y a trop d'images, on remet le tableau d'images d'avant
-    if(pictures.length > 20){
-      pictures = comment.pictures
-      throw Error("too much files")
+    if (pictures.length > 20) {
+      pictures = comment.pictures;
+      throw Error("too much files");
     }
 
     await CommentModel.findOneAndUpdate(
@@ -148,10 +152,10 @@ module.exports.updateComment = async (req, res) => {
       {
         $set: {
           text: text,
-          pictures : pictures,
+          pictures: pictures,
           // On est obligé de changer la date, mais ce n'est pas le membre qui l'enverra
           // Il faudra prendre la date du jour dans le formulaire
-          date : data.date
+          date: data.date,
         },
       },
       { new: true, upsert: true, setDefaultsOnInsert: true }

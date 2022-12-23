@@ -9,7 +9,7 @@ const path = require("path");
 const { signUpErrors } = require("../utils/errorsUtils");
 const bcrypt = require("bcrypt");
 const { isEmail } = require("validator");
-const fs = require('fs');
+const fs = require("fs");
 
 // Cette fonction marche
 module.exports.getAllMembers = async (req, res) => {
@@ -44,7 +44,6 @@ module.exports.updateMember = async (req, res) => {
   // On récupère les informations du formulaire
   const data = JSON.parse(JSON.stringify(req.body));
   try {
-    
     // Pour le moment, les valeurs du membre sont ses anciennes valeurs
     let pseudo = member.pseudo;
     let email = member.email;
@@ -57,11 +56,19 @@ module.exports.updateMember = async (req, res) => {
     // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
 
     // Cas particulier si on change le pseudo mais pas l'image, il faut renommer l'image
-    if (req.file === undefined && data.pseudo !== pseudo && picture !== "random_member.png") {
-      fs.renameSync('./public/clients/uploads/memberPicture/' + picture, './public/clients/uploads/memberPicture/' + data.pseudo + path.extname(picture));
+    if (
+      req.file === undefined &&
+      data.pseudo !== pseudo &&
+      picture !== "random_member.png"
+    ) {
+      fs.renameSync(
+        "./client/public/uploads/memberPicture/" + picture,
+        "./client/public/uploads/memberPicture/" +
+          data.pseudo +
+          path.extname(picture)
+      );
       picture = data.pseudo + path.extname(picture);
     }
-   
 
     if (data.pseudo !== "") pseudo = data.pseudo;
 
@@ -70,8 +77,8 @@ module.exports.updateMember = async (req, res) => {
     // Sinon si on a mis un email mais qu'il n'est pas conforme
     else if (data.email !== "" && !isEmail(data.email))
       throw Error("not good email");
-    
-      //Si on a mis un mdp, que ce mot de passe n'est pas le même qu'avant, et qu'il fait plus de 6 charactère
+
+    //Si on a mis un mdp, que ce mot de passe n'est pas le même qu'avant, et qu'il fait plus de 6 charactère
     if (data.pwd !== "" && auth === false && data.pwd.length >= 6) {
       pwd = data.pwd;
       // Comme on a mis un nouveau mdp, il faut l'encrypter
@@ -84,8 +91,8 @@ module.exports.updateMember = async (req, res) => {
     if (data.bio !== "") bio = data.bio;
 
     // Si le membre souhaite supprimer sa photo
-    if (data.deletePicture === "yes"){
-      picture = "random_member.png"
+    if (data.deletePicture === "yes") {
+      picture = "random_member.png";
     }
 
     if (req.file !== undefined) {
@@ -94,7 +101,7 @@ module.exports.updateMember = async (req, res) => {
       // Puis on renomme l'image
       picture = pseudo + path.extname(req.file.originalname);
     }
-    
+
     await MemberModel.findByIdAndUpdate(
       { _id: req.params.id },
       {

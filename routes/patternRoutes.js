@@ -12,13 +12,13 @@ const storage = multer.diskStorage({
     let dir;
     if (pattern._id === undefined) {
       if (file.fieldname === "pdf")
-        dir = `${__dirname}/../public/clients/uploads/patternPDF/`;
+        dir = `${__dirname}/../client/public/uploads/patternPDF/`;
 
       if (file.fieldname === "word")
-        dir = `${__dirname}/../public/clients/uploads/patternWord/`;
+        dir = `${__dirname}/../client/public/uploads/patternWord/`;
 
       if (file.fieldname === "picture")
-        dir = `${__dirname}/../public/clients/uploads/patternPicture/`;
+        dir = `${__dirname}/../client/public/uploads/patternPicture/`;
     }
 
     cb(null, dir);
