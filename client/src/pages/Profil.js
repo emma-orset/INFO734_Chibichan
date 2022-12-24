@@ -5,6 +5,7 @@ import { MidContext } from "../components/AppContext";
 const Profil = () => {
   const mid = useContext(MidContext)
   return (
+
     <div className="profil-page">
       {mid ? (
         <h1>INFORMATIONS DU MEMBRE</h1>

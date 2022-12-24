@@ -12,7 +12,9 @@ const index = () => {
         <Route path="/profil" exact element={<Profil />} />
         <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  </Router>;
+    
+  </Router>
+ 
 };
 
 export default index;
