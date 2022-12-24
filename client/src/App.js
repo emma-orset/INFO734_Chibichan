@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import Routes from "./components/Routes";
 import { MidContext } from "./components/AppContext";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { getMember } from "./actions/memberActions";
 
 function App() {
   const [mid, setMid] = useState(null);
+  const dispatch = useDispatch()
+
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -17,6 +21,9 @@ function App() {
         .catch((err) => console.log("No token"));
     };
     fetchToken();
+
+    if (mid) dispatch(getMember(mid))
+
   }, [mid]);
 
   return (
