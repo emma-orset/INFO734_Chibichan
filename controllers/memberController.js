@@ -13,7 +13,7 @@ const fs = require("fs");
 
 // Cette fonction marche
 module.exports.getAllMembers = async (req, res) => {
-  const members = await MemberModel.find().select("-pwd -admin");
+  const members = await MemberModel.find().select("-password -admin");
   res.status(200).json(members);
 };
 
@@ -26,7 +26,7 @@ module.exports.memberInfo = (req, res) => {
       console.log("Erreur : " + err);
       res.status(400).send("ID unknown : " + req.params.id);
     }
-  }).select("-pwd");
+  }).select("-password");
 };
 
 module.exports.updateMember = async (req, res) => {
@@ -47,12 +47,12 @@ module.exports.updateMember = async (req, res) => {
     // Pour le moment, les valeurs du membre sont ses anciennes valeurs
     let pseudo = member.pseudo;
     let email = member.email;
-    let pwd = member.pwd;
+    let password = member.password;
     let picture = member.picture;
     let bio = member.bio;
 
     // On regarde si le password passé en paramètre est le même
-    const auth = await bcrypt.compare(data.pwd, pwd);
+    const auth = await bcrypt.compare(data.password, password);
     // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
 
     // Cas particulier si on change le pseudo mais pas l'image, il faut renommer l'image
@@ -79,14 +79,14 @@ module.exports.updateMember = async (req, res) => {
       throw Error("not good email");
 
     //Si on a mis un mdp, que ce mot de passe n'est pas le même qu'avant, et qu'il fait plus de 6 charactère
-    if (data.pwd !== "" && auth === false && data.pwd.length >= 6) {
-      pwd = data.pwd;
+    if (data.password !== "" && auth === false && data.password.length >= 6) {
+      password = data.password;
       // Comme on a mis un nouveau mdp, il faut l'encrypter
       const salt = await bcrypt.genSalt();
-      pwd = await bcrypt.hash(pwd, salt);
+      password = await bcrypt.hash(password, salt);
     }
     // Sinon si on a mis un mdp mais qu'il fait moins de 6 charactères
-    else if (data.pwd !== "" && data.pwd.length < 6) throw Error("pwd inf 6");
+    else if (data.password !== "" && data.password.length < 6) throw Error("password inf 6");
 
     if (data.bio !== "") bio = data.bio;
 
@@ -108,7 +108,7 @@ module.exports.updateMember = async (req, res) => {
         $set: {
           pseudo: pseudo,
           email: email,
-          pwd: pwd,
+          password: password,
           picture: picture,
           bio: bio,
         },

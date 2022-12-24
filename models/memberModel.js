@@ -19,7 +19,7 @@ const memberSchema = new mongoose.Schema(
       trim: true,
     },
 
-    pwd: {
+    password: {
       type: String,
       required: true,
       minlength: 6,
@@ -61,14 +61,14 @@ const memberSchema = new mongoose.Schema(
 // fonction qui va s'executer avant de save en base de données
 memberSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
-  this.pwd = await bcrypt.hash(this.pwd, salt);
+  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-memberSchema.statics.login = async function (email, pwd) {
+memberSchema.statics.login = async function (email, password) {
   const member = await this.findOne({ email: email });
   if (member) {
-    const auth = await bcrypt.compare(pwd, member.pwd);
+    const auth = await bcrypt.compare(password, member.password);
     if (auth) {
       return member;
     }

@@ -1,5 +1,5 @@
 module.exports.signUpErrors = (err) => {
-  let errors = { pseudo: "", email: "", pwd: "" };
+  let errors = { pseudo: "", email: "", password: "" };
 
   if (err.message.includes("pseudo")) {
     errors.pseudo = "Pseudo incorrect";
@@ -9,8 +9,8 @@ module.exports.signUpErrors = (err) => {
     errors.email = "Email incorrect";
   }
 
-  if (err.message.includes("pwd") || err.message.includes("pwd inf 6")) {
-    errors.pwd = "Le mot de passe doit faire 6 caractères minimum";
+  if (err.message.includes("password") || err.message.includes("password inf 6")) {
+    errors.password = "Le mot de passe doit faire 6 caractères minimum";
   }
 
   if (err.code === 11000 && Object.keys(err.keyValue)[0].includes("pseudo")) {
@@ -25,10 +25,10 @@ module.exports.signUpErrors = (err) => {
 };
 
 module.exports.signInErrors = (err) => {
-  let errors = { email: "", pwd: "" };
+  let errors = { email: "", password: "" };
 
   if (err.message.includes("Incorrect password")) {
-    errors.pwd = "Le mot de passe ne correspond pas";
+    errors.password = "Le mot de passe ne correspond pas";
   }
 
   if (err.message.includes("Incorrect email")) {
