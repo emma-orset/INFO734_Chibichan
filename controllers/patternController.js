@@ -421,9 +421,12 @@ module.exports.addLiker = async (req, res) => {
     return res.status(400).send("Member ID unknown : " + req.body.idMember);
   }
 
+  let pattern
+  let member
+
   try {
     // On recherche le patron grâce à son ID
-    await PatternModel.findByIdAndUpdate(
+    pattern = await PatternModel.findByIdAndUpdate(
       req.params.id,
       {
         // On ajoute le membre à la liste des likers du patron
@@ -431,11 +434,9 @@ module.exports.addLiker = async (req, res) => {
       },
       { new: true }
     )
-      .then((docs) => (msg += docs + ","))
-      .catch((err) => res.status(400).send({ message: err }));
-
+      
     // On recherche le membre grâce à son ID
-    await MemberModel.findByIdAndUpdate(
+    member = await MemberModel.findByIdAndUpdate(
       req.body.idMember,
       {
         // On ajoute le patron à la liste des pattern likés par le membre
@@ -443,17 +444,19 @@ module.exports.addLiker = async (req, res) => {
       },
       { new: true }
     )
-      .then((docs) => (msg += docs))
-      .catch((err) => res.status(400).send({ message: err }));
-    res.send(msg);
+     
   } catch (err) {
+    
     return res.status(400).send({ message: err });
+    
   }
+
+  res.send({ pattern, member });
 };
 
 // Cette fonction marche
 module.exports.deleteLiker = async (req, res) => {
-  msg = "";
+
 
   // On vérifie que l'identifiant du pattern passé en paramètre est correct
   if (!ObjectID.isValid(req.params.id)) {
@@ -471,9 +474,12 @@ module.exports.deleteLiker = async (req, res) => {
     return res.status(400).send("Member ID unknown : " + req.body.idMember);
   }
 
+  let pattern
+  let member
+
   try {
     // On recherche le patron grâce à son ID
-    await PatternModel.findByIdAndUpdate(
+    pattern = await PatternModel.findByIdAndUpdate(
       req.params.id,
       {
         // On supprime le membre de la liste des likers du patron
@@ -481,11 +487,9 @@ module.exports.deleteLiker = async (req, res) => {
       },
       { new: true }
     )
-      .then((docs) => (msg += docs + ","))
-      .catch((err) => res.status(400).send({ message: err }));
 
     // On recherche le membre grâce à son ID
-    await MemberModel.findByIdAndUpdate(
+    member = await MemberModel.findByIdAndUpdate(
       req.body.idMember,
       {
         // On supprime le patron de la liste des pattern likés par le membre
@@ -493,10 +497,9 @@ module.exports.deleteLiker = async (req, res) => {
       },
       { new: true }
     )
-      .then((docs) => (msg += docs))
-      .catch((err) => res.status(400).send({ message: err }));
-    res.send(msg);
+
   } catch (err) {
     return res.status(400).send({ message: err });
   }
+  res.send({ pattern, member });
 };

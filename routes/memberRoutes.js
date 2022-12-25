@@ -11,8 +11,6 @@ const storage = multer.diskStorage({
     cb(null, `${__dirname}/../client/public/uploads/memberPicture/`);
   },
   filename: async (req, file, cb) => {
-    // On récupère les data passées dans le formulaire
-    const data = JSON.parse(JSON.stringify(req.body));
 
     // On recherche les informations du membre à mettre à jour
     const member = await MemberModel.findById(req.params.id, (err, docs) => {
@@ -21,8 +19,6 @@ const storage = multer.diskStorage({
 
     // Pour l'instant le pseudo est l'ancien
     let pseudo = member.pseudo;
-    // Si un nouveau pseudo est passé dans le formulaire, on l'utilise
-    if (data.pseudo !== undefined) pseudo = data.pseudo;
 
     const fileName = pseudo + path.extname(file.originalname);
 
@@ -40,7 +36,8 @@ router.get("/signOut", authController.signOut);
 // member
 router.get("/", memberController.getAllMembers);
 router.get("/:id", memberController.memberInfo);
-router.put("/:id", upload.single("picture"), memberController.updateMember);
+router.put("/updatePicture/:id", upload.single("picture"), memberController.updatePicture);
+router.put("/:id", memberController.updateMember);
 router.delete("/:id", memberController.deleteMember);
 
 //upload

@@ -7,7 +7,7 @@ module.exports.checkMember = (req, res, next) => {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
       if (err) {
         res.locals.member = null;
-        res.cookie("jwr", "jwt", { maxAge: 1 });
+        // res.cookie("jwt", "", { maxAge: 1 });
       } else {
         let member = await MemberModel.findById(decodedToken.id);
         res.locals.member = member;

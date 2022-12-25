@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import Log from "../components/Log";
 import { MidContext } from "../components/AppContext";
+import UpdateProfil from "../components/Profil/UpdateProfil";
 
 const Profil = () => {
   const mid = useContext(MidContext)
@@ -8,7 +9,7 @@ const Profil = () => {
 
     <div className="profil-page">
       {mid ? (
-        <h1>INFORMATIONS DU MEMBRE</h1>
+        <UpdateProfil/>
       ) : (
         <div className="log-container">
         <Log signIn={false} signUp={true}/>

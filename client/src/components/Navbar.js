@@ -15,7 +15,7 @@ const Navbar = () => {
       <div className="nav-container">
         <div className="logo">
         
-            <Link exact to="/">
+            <Link exact="true" to="/">
             <div className="logo">
               <img src="./images/icon.png" alt="icon" />
               <h3>Chibichan</h3>
@@ -27,7 +27,7 @@ const Navbar = () => {
           <ul>
             <li></li>
             <li className="welcome">
-              <Link exact to="/profil">
+              <Link exact="true" to="/profil">
                 <h5>Bienvenue {memberData.pseudo}</h5>
               </Link>
             </li>
@@ -37,7 +37,7 @@ const Navbar = () => {
           <ul>
             <li></li>
             <li>
-              <Link exact to="/profil">
+              <Link exact="true" to="/profil">
                 <img src="./images/icons/login.svg" alt="login" />
               </Link>
             </li>

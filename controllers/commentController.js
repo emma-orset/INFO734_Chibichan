@@ -114,7 +114,7 @@ module.exports.updateComment = async (req, res) => {
 
     // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
 
-    if (data.text !== "") text = data.text;
+    if (data.text !== "" && data.text !== undefined) text = data.text;
 
     // Si le membre a cliqué sur le bouton "supprimer les photos"
     if (data.deletePictures === "yes") {

@@ -29,6 +29,61 @@ module.exports.memberInfo = (req, res) => {
   }).select("-password");
 };
 
+
+
+
+module.exports.updatePicture = async (req, res) => {
+  // On vérifie que l'ID du membre est valid
+  if (!ObjectID.isValid(req.params.id)) {
+    return res.status(400).send(req.params.id + " is not a correct syntax ID");
+  }
+
+  // On recherche le membre à mettre à jour
+  const member = await MemberModel.findById(req.params.id, (err, docs) => {
+    // On retourne une erreur s'il n'existe pas
+    if (err) res.status(400).send("ID unknown : " + req.params.id);
+  }).clone();
+
+  // On récupère les informations du formulaire
+  const data = JSON.parse(JSON.stringify(req.body));
+  try {
+    // Pour le moment, les valeurs du membre sont ses anciennes valeurs
+    let pseudo = member.pseudo;
+    let picture = member.picture;
+
+    // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
+
+    // Si le membre souhaite supprimer sa photo
+    if (data.deletePicture === "yes") {
+      picture = "random_member.png";
+    }
+
+    if (req.file !== undefined) {
+      // Si une image est donnée, on fait les vérifications nécéssaires
+      verifPicture(req.file, res);
+      // Puis on renomme l'image
+      picture = pseudo + path.extname(req.file.originalname);
+    }
+
+    await MemberModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          picture: picture,
+        },
+      },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    ).then((docs) => res.send(docs));
+  } catch (err) {
+    // Ce sont les mêmes erreurs que le signUp qui peuvent apparaitre
+    const errors = signUpErrors(err);
+    res.status(200).send({ errors });
+  }
+};
+
+
+
+
 module.exports.updateMember = async (req, res) => {
   // On vérifie que l'ID du membre est valid
   if (!ObjectID.isValid(req.params.id)) {
@@ -50,14 +105,23 @@ module.exports.updateMember = async (req, res) => {
     let password = member.password;
     let picture = member.picture;
     let bio = member.bio;
+    let auth = true;
 
-    // On regarde si le password passé en paramètre est le même
-    const auth = await bcrypt.compare(data.password, password);
+    // Pour éviter de traiter à la fois undefined et vide, on met à vide
+    if(data.pseudo === undefined) data.pseudo = ""
+    if(data.email === undefined) data.email = ""
+    if(data.password === undefined) data.password = ""
+    if(data.bio === undefined) data.bio = ""
+
     // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
 
-    // Cas particulier si on change le pseudo mais pas l'image, il faut renommer l'image
-    if (
-      req.file === undefined &&
+    if (data.password !== "") {
+      // On regarde si le password passé en paramètre est le même
+      auth = await bcrypt.compare(data.password, password);
+    }
+
+    // Cas particulier si on change le pseudo, il faut renommer l'image
+    if (data.pseudo !== "" &&
       data.pseudo !== pseudo &&
       picture !== "random_member.png"
     ) {
@@ -86,20 +150,14 @@ module.exports.updateMember = async (req, res) => {
       password = await bcrypt.hash(password, salt);
     }
     // Sinon si on a mis un mdp mais qu'il fait moins de 6 charactères
-    else if (data.password !== "" && data.password.length < 6) throw Error("password inf 6");
+    else if (data.password !== "" && data.password.length < 6)
+      throw Error("password inf 6");
 
     if (data.bio !== "") bio = data.bio;
 
     // Si le membre souhaite supprimer sa photo
     if (data.deletePicture === "yes") {
       picture = "random_member.png";
-    }
-
-    if (req.file !== undefined) {
-      // Si une image est donnée, on fait les vérifications nécéssaires
-      verifPicture(req.file, res);
-      // Puis on renomme l'image
-      picture = pseudo + path.extname(req.file.originalname);
     }
 
     await MemberModel.findByIdAndUpdate(
@@ -117,10 +175,131 @@ module.exports.updateMember = async (req, res) => {
     ).then((docs) => res.send(docs));
   } catch (err) {
     // Ce sont les mêmes erreurs que le signUp qui peuvent apparaitre
+    console.log(err);
     const errors = signUpErrors(err);
-    res.status(500).send({ errors });
+    res.status(200).send({ errors });
   }
 };
+
+
+
+
+
+
+
+
+// module.exports.updateMember = async (req, res) => {
+//   // On vérifie que l'ID du membre est valid
+//   if (!ObjectID.isValid(req.params.id)) {
+//     return res.status(400).send(req.params.id + " is not a correct syntax ID");
+//   }
+
+//   // On recherche le membre à mettre à jour
+//   const member = await MemberModel.findById(req.params.id, (err, docs) => {
+//     // On retourne une erreur s'il n'existe pas
+//     if (err) res.status(400).send("ID unknown : " + req.params.id);
+//   }).clone();
+
+//   // On récupère les informations du formulaire
+//   const data = JSON.parse(JSON.stringify(req.body));
+//   try {
+//     // Pour le moment, les valeurs du membre sont ses anciennes valeurs
+//     let pseudo = member.pseudo;
+//     let email = member.email;
+//     let password = member.password;
+//     let picture = member.picture;
+//     let bio = member.bio;
+//     let auth = true;
+
+//     // Pour éviter de traiter à la fois undefined et vide, on met à vide
+//     if(data.pseudo === undefined) data.pseudo = ""
+//     if(data.email === undefined) data.email = ""
+//     if(data.password === undefined) data.password = ""
+//     if(data.bio === undefined) data.bio = ""
+
+//     // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
+
+//     if (data.password !== "") {
+//       // On regarde si le password passé en paramètre est le même
+//       auth = await bcrypt.compare(data.password, password);
+//     }
+
+//     // Cas particulier si on change le pseudo mais pas l'image, il faut renommer l'image
+//     if (
+//       req.file === undefined &&
+//       data.pseudo !== pseudo &&
+//       picture !== "random_member.png"
+//     ) {
+//       fs.renameSync(
+//         "./client/public/uploads/memberPicture/" + picture,
+//         "./client/public/uploads/memberPicture/" +
+//           data.pseudo +
+//           path.extname(picture)
+//       );
+//       picture = data.pseudo + path.extname(picture);
+//     }
+
+//     if (data.pseudo !== "") pseudo = data.pseudo;
+
+//     // Si on a mis un email et que l'email est valide
+//     if (data.email !== "" && isEmail(data.email)) email = data.email;
+//     // Sinon si on a mis un email mais qu'il n'est pas conforme
+//     else if (data.email !== "" && !isEmail(data.email))
+//       throw Error("not good email");
+
+//     //Si on a mis un mdp, que ce mot de passe n'est pas le même qu'avant, et qu'il fait plus de 6 charactère
+//     if (data.password !== "" && auth === false && data.password.length >= 6) {
+//       password = data.password;
+//       // Comme on a mis un nouveau mdp, il faut l'encrypter
+//       const salt = await bcrypt.genSalt();
+//       password = await bcrypt.hash(password, salt);
+//     }
+//     // Sinon si on a mis un mdp mais qu'il fait moins de 6 charactères
+//     else if (data.password !== "" && data.password.length < 6)
+//       throw Error("password inf 6");
+
+//     if (data.bio !== "") bio = data.bio;
+
+//     // Si le membre souhaite supprimer sa photo
+//     if (data.deletePicture === "yes") {
+//       picture = "random_member.png";
+//     }
+
+//     if (req.file !== undefined) {
+//       // Si une image est donnée, on fait les vérifications nécéssaires
+//       verifPicture(req.file, res);
+//       // Puis on renomme l'image
+//       picture = pseudo + path.extname(req.file.originalname);
+//     }
+
+//     await MemberModel.findByIdAndUpdate(
+//       { _id: req.params.id },
+//       {
+//         $set: {
+//           pseudo: pseudo,
+//           email: email,
+//           password: password,
+//           picture: picture,
+//           bio: bio,
+//         },
+//       },
+//       { new: true, upsert: true, setDefaultsOnInsert: true }
+//     ).then((docs) => res.send(docs));
+//   } catch (err) {
+//     // Ce sont les mêmes erreurs que le signUp qui peuvent apparaitre
+//     console.log(err);
+//     const errors = signUpErrors(err);
+//     res.status(200).send({ errors });
+//   }
+// };
+
+
+
+
+
+
+
+
 
 // Cette fonction marche
 module.exports.deleteMember = async (req, res) => {

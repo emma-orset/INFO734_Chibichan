@@ -6,11 +6,12 @@ const LeftNav = () => {
         <div className="left-nav-container">
             <div className="icons">
                 <div className="icons-bis">
-                    <Link exact to="/"  activeClassName="active-left-nav">
+                    {/* activeClassName="active-left-nav" */}
+                    <Link exact="true" to="/" >
                         <img src="./images/icons/home.svg" alt="home"/>
                     </Link>
                     <br/>
-                    <Link exact to="/profil"  activeClassName="active-left-nav">
+                    <Link exact="true" to="/profil" >
                         <img src="./images/icons/member.svg" alt="member"/>
                     </Link>
                 </div>
