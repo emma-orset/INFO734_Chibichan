@@ -18,20 +18,20 @@ const commentSchema = new mongoose.Schema(
       required: true,
     },
 
-    pictures: {
-      // Chemin des images
-      type: [String],
-    },
+    // pictures: {
+    //   // Chemin des images
+    //   type: [String],
+    // },
 
     likers: {
       // Identifiants des membres qui aiment le commentaire
       type: [String],
     },
 
-    date: {
-      type: Date,
-      required: true,
-    },
+    // date: {
+    //   type: Date,
+    //   required: true,
+    // },
   },
   {
     timestamps: true,

@@ -1,7 +1,9 @@
 import { combineReducers } from "redux";
 import memberReducer from "./memberReducer";
-import patternsReducer from "./patternsReducer";
+import membersReducer from "./membersReducer";
+import patternReducer from "./patternReducer";
+import commentReducer from "./commentReducer";
 
 export default combineReducers({
-    memberReducer, patternsReducer,
+    memberReducer, patternReducer, membersReducer, commentReducer
 })

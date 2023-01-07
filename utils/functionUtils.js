@@ -38,3 +38,12 @@ module.exports.verifPicture = function (file, res) {
     return res.status(500).json({ errors });
   }
 };
+
+module.exports.isEmpty = function (value) {
+  return (
+    value === undefined ||
+    value === null ||
+    (typeof value === "object" && Object.keys(value).length === 0) ||
+    (typeof value === "string" && value.trim().length === 0)
+  );
+};

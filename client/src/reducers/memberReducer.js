@@ -5,7 +5,7 @@ import {
   UPDATE_PSEUDO,
   UPDATE_EMAIL,
   UPDATE_PASSWORD,
-  DELETE_PICTURE
+  DELETE_PICTURE,
 } from "../actions/memberActions";
 import { LIKE_PATTERN, UNLIKE_PATTERN } from "../actions/patternActions";
 
@@ -46,23 +46,25 @@ export default function memberReducer(state = initialState, action) {
         password: action.payload,
       };
 
-      case DELETE_PICTURE:
+    case DELETE_PICTURE:
       return {
         ...state,
         picture: action.payload,
       };
 
-      case LIKE_PATTERN:
+    case LIKE_PATTERN:
       return {
         ...state,
-        patternLikes: [action.payload.idPattern, ...state.patternLikes],
+        patternLikes: [...state.patternLikes, action.payload.idPattern],
       };
 
-      case UNLIKE_PATTERN:
-        return {
-          ...state,
-          patternLikes: state.patternLikes.filter((id) => id !== action.payload.idPattern),
-        };
+    case UNLIKE_PATTERN:
+      return {
+        ...state,
+        patternLikes: state.patternLikes.filter(
+          (idPattern) => idPattern !== action.payload.idPattern
+        ),
+      };
 
     default:
       return state;

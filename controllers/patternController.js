@@ -5,7 +5,7 @@ const CommentModel = require("../models/commentModel");
 const { addPatternErrors, uploadErrors } = require("../utils/errorsUtils");
 const ObjectID = require("mongoose").Types.ObjectId;
 const path = require("path");
-const { getDate } = require("../utils/functionUtils");
+const { getDate, isEmpty } = require("../utils/functionUtils");
 const fs = require("fs");
 
 // Cette fonction marche
@@ -168,12 +168,15 @@ module.exports.updatePattern = async (req, res) => {
     let description = pattern.description;
     let tags = pattern.tags;
 
+    console.log(req.files)
+
+    
     // Cas particulier si on change l'ID custom mais pas l'image, il faut renommer l'image
     if (
-      req.files["picture"] === undefined &&
+      isEmpty(req.files["picture"]) &&
       data.idCustom !== idCustom &&
       picture !== "null" &&
-      data.idCustom !== undefined
+      !isEmpty(data.idCustom)
     ) {
       fs.renameSync(
         "./client/public/uploads/patternPicture/" + picture,
@@ -191,7 +194,7 @@ module.exports.updatePattern = async (req, res) => {
       req.files["pdf"] === undefined &&
       data.idCustom !== idCustom &&
       pdf !== "null" &&
-      data.idCustom !== undefined
+      !isEmpty(data.idCustom)
     ) {
       fs.renameSync(
         "./client/public/uploads/patternPDF/" + pdf,
@@ -209,8 +212,8 @@ module.exports.updatePattern = async (req, res) => {
       req.files["word"] === undefined &&
       data.idCustom !== idCustom &&
       word !== "null" &&
-      word !== "" &&
-      data.idCustom !== undefined
+      !isEmpty(word) &&
+      !isEmpty(data.idCustom)
     ) {
       fs.renameSync(
         "./client/public/uploads/patternWord/" + word,
@@ -224,17 +227,16 @@ module.exports.updatePattern = async (req, res) => {
     }
 
     // Pour chaque valeur, si elle est définie on l'a met à jour, sinon elle reste la même
-    if (data.idCustom !== "" && data.idCustom !== undefined)
+    if (!isEmpty(data.idCustom))
       idCustom = data.idCustom;
-    if (data.title !== "" && data.title !== undefined) title = data.title;
-    if (data.type !== "" && data.type !== undefined) type = data.type;
-    if (data.description !== "" && data.description !== undefined)
+    if (!isEmpty(data.title)) title = data.title;
+    if (!isEmpty(data.type)) type = data.type;
+    if (!isEmpty(data.description))
       description = data.description;
-    if (data.deleteTags === "yes") tags = [];
     if (data.deleteWord === "yes") word = "";
-    if (data.tags !== "" && data.tags !== undefined)
-      tags = tags.concat(data.tags.split(","));
-    if (tags.length === 0) throw Error("tags required");
+    if (!isEmpty(data.tags))
+      tags = data.tags.split(",")
+    // if (tags.length === 0) throw Error("tags required");
 
     // On vérifie que le type est bon
     if (
@@ -248,24 +250,24 @@ module.exports.updatePattern = async (req, res) => {
 
     // On vérifie que les fichiers font la bonne taille
     if (
-      (req.files["picture"] !== undefined &&
+      (!isEmpty(req.files["picture"]) &&
         req.files["picture"][0].size > 1000000000) ||
-      (req.files["pdf"] !== undefined &&
+      (!isEmpty(req.files["pdf"]) &&
         req.files["pdf"][0].size > 1000000000) ||
-      (req.files["word"] !== undefined &&
+      (!isEmpty(req.files["word"]) &&
         req.files["word"][0].size > 1000000000)
     )
       throw Error("max size");
 
     // On vérifie que les fichiers sont dans le bon format
     if (
-      (req.files["picture"] !== undefined &&
+      (!isEmpty(req.files["picture"]) &&
         req.files["picture"][0].mimetype !== "image/jpg" &&
         req.files["picture"][0].mimetype !== "image/png" &&
         req.files["picture"][0].mimetype !== "image/jpeg") ||
-      (req.files["pdf"] !== undefined &&
+      (!isEmpty(req.files["pdf"]) &&
         req.files["pdf"][0].mimetype !== "application/pdf") ||
-      (req.files["word"] !== undefined &&
+      (!isEmpty(req.files["word"]) &&
         req.files["word"][0].mimetype !==
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
         req.files["word"][0].mimetype !== "application/msword")
@@ -275,20 +277,20 @@ module.exports.updatePattern = async (req, res) => {
 
     // On modifie le nom des fichiers
     if (
-      req.files["pdf"] !== undefined &&
+      !isEmpty(req.files["pdf"]) &&
       req.files["pdf"][0].fieldname === "pdf"
     )
       pdf = idCustom + date + path.extname(req.files["pdf"][0].originalname);
 
     if (
-      req.files["picture"] !== undefined &&
+      !isEmpty(req.files["picture"]) &&
       req.files["picture"][0].fieldname === "picture"
     )
       picture =
         idCustom + date + path.extname(req.files["picture"][0].originalname);
 
     if (
-      req.files["word"] !== undefined &&
+      !isEmpty(req.files["word"]) &&
       req.files["word"][0].fieldname === "word"
     ) {
       word = idCustom + date + path.extname(req.files["word"][0].originalname);
@@ -301,16 +303,18 @@ module.exports.updatePattern = async (req, res) => {
           idCustom: idCustom,
           title: title,
           type: type,
+          description: description,
+          tags: tags,
           picture: picture,
           pdf: pdf,
           word: word,
-          description: description,
-          tags: tags,
+          
         },
       },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     ).then((docs) => res.send(docs));
   } catch (err) {
+    console.log(err)
     const errors = addPatternErrors(err);
     return res.status(500).json({ errors });
   }

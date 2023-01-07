@@ -3,7 +3,7 @@ const patternController = require("../controllers/patternController");
 const multer = require("multer");
 const PatternModel = require("../models/patternModel");
 const path = require("path");
-const { getDate } = require("../utils/functionUtils");
+const { getDate, isEmpty } = require("../utils/functionUtils");
 
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
@@ -30,9 +30,9 @@ const storage = multer.diskStorage({
     let fileName = "null";
 
     // si on est dans le cas d'une modification de patron
-    if (req.params.id !== undefined) {
+    if (!isEmpty(req.params.id)) {
       // Si on n'a pas set un nouvel ID custom
-      if (req.body.idCustom === undefined) {
+      if (isEmpty(req.body.idCustom)) {
         // On recherche les infos du pattern à modifier
         const pattern = await PatternModel.findById(
           req.params.id,
@@ -55,10 +55,10 @@ const storage = multer.diskStorage({
         (file.fieldname === "pdf" ||
           file.fieldname === "word" ||
           file.fieldname === "picture") &&
-        data.idCustom !== "" &&
-        data.tags !== "" &&
-        data.title !== "" &&
-        data.type !== "" &&
+        !isEmpty(data.idCustom) &&
+        !isEmpty(data.tags) &&
+        !isEmpty(data.title) &&
+        !isEmpty(data.type) &&
         (data.type === "Crochet" ||
           data.type === "Point de Croix" ||
           data.type === "Broderie" ||
