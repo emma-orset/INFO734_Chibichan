@@ -1,12 +1,14 @@
 import axios from "axios";
 
 export const GET_PATTERNS = "GET_PATTERNS";
+export const GET_ALL_PATTERNS = "GET_ALL_PATTERNS";
 export const GET_PATTERN = "GET_PATTERN";
 export const ADD_PATTERN = "ADD_PATTERN"
 export const LIKE_PATTERN = "LIKE_PATTERN";
 export const UNLIKE_PATTERN = "UNLIKE_PATTERN";
 export const UPDATE_PATTERN = "UPDATE_PATTERN";
 export const DELETE_PATTERN = "DELETE_PATTERN";
+export const GET_TAGS = "GET_TAGS";
 
 export const getPatterns = (num) => {
   return (dispatch) => {
@@ -15,6 +17,7 @@ export const getPatterns = (num) => {
       .then((res) => {
         const array = res.data.slice(0, num);
         dispatch({ type: GET_PATTERNS, payload: array });
+        dispatch({ type: GET_ALL_PATTERNS, payload: res.data });
       })
       .catch((err) => console.log(err));
   };
@@ -83,4 +86,11 @@ export const deletePattern = (idPattern) => {
     })
       
   };
+}
+
+export const getTags = (tags) => {
+  return (dispatch) => {
+    dispatch({type:GET_TAGS, payload: tags})
+  };
+
 }

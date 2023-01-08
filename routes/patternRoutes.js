@@ -60,10 +60,11 @@ const storage = multer.diskStorage({
         !isEmpty(data.title) &&
         !isEmpty(data.type) &&
         (data.type === "Crochet" ||
-          data.type === "Point de Croix" ||
+          data.type === "Point De Croix" ||
           data.type === "Broderie" ||
           data.type === "Tricot" ||
-          data.type === "Bracelet Brésilien") &&
+          data.type === "Bracelet Brésilien" ||
+          data.type === "Couture") &&
         ((file.fieldname === "pdf" && file.mimetype === "application/pdf") ||
           (file.fieldname === "word" &&
             (file.mimetype === "application/msword" ||

@@ -67,6 +67,9 @@ const AddPattern = () => {
     setpdfFile("");
     setWordFile("");
     setPictureFile("");
+    setPDF(null)
+    setWord(null)
+    setPicture(null)
   };
 
   return (
@@ -93,7 +96,7 @@ const AddPattern = () => {
           id="tags"
           placeholder="Tags (exemple : amigurumi,chien,noël)"
           value={tags}
-          onChange={(e) => setTags(e.target.value)}
+          onChange={(e) => setTags(e.target.value.toLowerCase())}
         />
         <br />
         <textarea
@@ -121,6 +124,8 @@ const AddPattern = () => {
           <option value="Broderie">Broderie</option>
 
           <option value="Point De Croix">Point De Croix</option>
+
+          <option value="Couture">Couture</option>
 
           <option value="Bracelet Brésilien">Bracelet Brésilien</option>
         </select>

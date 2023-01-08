@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  deleteComment,
-  editComment,
-  getComments,
-} from "../../actions/commentActions";
-import { getPattern, getPatterns } from "../../actions/patternActions";
-import { MidContext } from "../AppContext";
+import { deleteComment, editComment } from "../../actions/commentActions";
+import { getPatterns } from "../../actions/patternActions";
 
-const EditDeleteComment = ({ comment }) => {
+const EditDeleteComment = ({ comment, pattern }) => {
   const [edit, setEdit] = useState(false);
   const [text, setText] = useState("");
 
   const dispatch = useDispatch();
-  
 
   const handleEdit = (e) => {
     e.preventDefault();
@@ -22,25 +16,31 @@ const EditDeleteComment = ({ comment }) => {
     setEdit(false);
   };
 
-  const handleDelete = () => {
-    dispatch(deleteComment(comment._id))
-    dispatch(getComments())
-    dispatch(getPattern(comment.idPattern))
+  const handleDelete = async () => {
+    await dispatch(deleteComment(comment._id, pattern._id));
+    dispatch(getPatterns());
   };
+
+  const handleCancel = () => {
+    setText("")
+    setEdit(false);
+  };
+
   return (
     <>
-      <div>
+      <div class="edit">
         {edit && (
-          <form action="" onSubmit={handleEdit} className="edit-comment-form">
-            <input
+          <>
+            <textarea
               type="text"
-              name="text"
               onChange={(e) => setText(e.target.value)}
               defaultValue={comment.text}
-            />
-            <br />
-            <input type="submit" value="Valider Modification" />
-          </form>
+            ></textarea>
+            <div class="comment-button">
+              <button onClick={handleCancel}>Annuler</button>
+              <button onClick={handleEdit}>Valider</button>
+            </div>
+          </>
         )}
 
         {!edit && (
@@ -55,6 +55,7 @@ const EditDeleteComment = ({ comment }) => {
       </div>
 
       <div
+        class="delete-comment"
         onClick={() => {
           if (window.confirm(`Voulez-vous supprimer ce commentaire ?`)) {
             handleDelete();

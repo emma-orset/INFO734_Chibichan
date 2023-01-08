@@ -48,6 +48,8 @@ export default function commentReducer(state = initialState, action) {
         return comment;
       });
 
+      
+
     default:
       return state;
   }

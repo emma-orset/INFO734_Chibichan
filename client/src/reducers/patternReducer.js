@@ -1,10 +1,10 @@
+import { DELETE_COMMENT } from "../actions/commentActions";
 import {
-  DELETE_PATTERN,
+  GET_ALL_PATTERNS,
   GET_PATTERN,
   GET_PATTERNS,
   LIKE_PATTERN,
   UNLIKE_PATTERN,
-  UPDATE_PATTERN,
 } from "../actions/patternActions";
 
 const initialState = {};
@@ -12,6 +12,9 @@ const initialState = {};
 export default function patternReducer(state = initialState, action) {
   switch (action.type) {
     case GET_PATTERNS:
+      return action.payload;
+
+    case GET_ALL_PATTERNS:
       return action.payload;
 
     case GET_PATTERN:
@@ -41,7 +44,18 @@ export default function patternReducer(state = initialState, action) {
         return pattern;
       });
 
-      
+      case DELETE_COMMENT:
+        return state.map((pattern) => {
+          if (pattern._id === action.payload.idPattern) {
+            return {
+              ...pattern,
+              comments: pattern.comments.filter(
+                (idComment) => idComment !== action.payload.idComment
+              ),
+            };
+          }
+          return pattern;
+        });
 
     default:
       return state;

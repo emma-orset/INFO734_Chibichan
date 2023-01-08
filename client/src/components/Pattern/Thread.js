@@ -26,6 +26,8 @@ const Thread = ({patterns}) => {
     return () => window.removeEventListener('scroll', loadMore)
   }, [loadPattern, dispatch]);
 
+
+
   return (
     <div className="thread-container">
       <ul>
@@ -33,6 +35,9 @@ const Thread = ({patterns}) => {
           patterns.map((pattern) => {
             return <Card pattern={pattern} key={pattern._id} />;
           })}
+          {isEmpty(patterns[0]) && (
+            <span>Aucun patron trouvé ...</span>)}
+
       </ul>
     </div>
   );

@@ -74,12 +74,15 @@ export const likeComment = (idComment, idMember) => {
     };
   };
 
-  export const deleteComment = (idComment) => {
+  export const deleteComment = (idComment, idPattern) => {
     return (dispatch) => {
       return axios ({
         method: "delete",
         url: `${process.env.REACT_APP_API_URL}api/comment/${idComment}`,
+      }).then((res) => {
+        dispatch({ type: DELETE_COMMENT, payload: { idPattern, idComment } });
       })
+      .catch((err) => console.log(err));
         
     };
   } 

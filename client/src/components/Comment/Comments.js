@@ -101,7 +101,7 @@ const Comments = ({ pattern }) => {
                   {!isEmpty(memberData._id) &&
                     (comment.writer === memberData._id ||
                       memberData.admin) && (
-                      <EditDeleteComment comment={comment} />
+                      <EditDeleteComment comment={comment} pattern={pattern} />
                     )}
                   {!isEmpty(memberData._id) &&
                     comment.writer !== memberData._id && (

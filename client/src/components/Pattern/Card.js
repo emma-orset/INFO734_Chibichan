@@ -158,7 +158,7 @@ const Card = ({ pattern }) => {
                 src="./images/icons/message1.svg"
                 alt="comment"
               />
-              <span>{pattern?.comments.length}</span>
+              <span>{pattern?.comments?.length ?? 0}</span>
             </div>
             {/* <span>{dateParser(pattern.createdAt)}</span> */}
 
@@ -201,7 +201,7 @@ const Card = ({ pattern }) => {
             name="tags"
             id="tags"
             defaultValue={pattern.tags}
-            onChange={(e) => setTags(e.target.value)}
+            onChange={(e) => setTags(e.target.value.toLowerCase())}
           />
           <br />
           <label>Modifier la description</label>
@@ -252,6 +252,15 @@ const Card = ({ pattern }) => {
             )}
             {pattern.type !== "Point De Croix" && (
               <option value="Point De Croix">Point De Croix</option>
+            )}
+
+{pattern.type === "Couture" && (
+              <option value="Couture" selected>
+                Couture
+              </option>
+            )}
+            {pattern.type !== "Couture" && (
+              <option value="Couture">Point De Croix</option>
             )}
 
             {pattern.type === "Bracelet Brésilien" && (

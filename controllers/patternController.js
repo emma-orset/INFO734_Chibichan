@@ -37,10 +37,11 @@ module.exports.addPattern = async (req, res) => {
     // On regarde si le type est conforme
     if (
       data.type !== "Crochet" &&
-      data.type !== "Point de Croix" &&
+      data.type !== "Point De Croix" &&
       data.type !== "Broderie" &&
       data.type !== "Tricot" &&
-      data.type !== "Bracelet Brésilien"
+      data.type !== "Bracelet Brésilien" &&
+      data.type !== "Couture"
     )
       throw Error("not good type");
 
@@ -241,10 +242,11 @@ module.exports.updatePattern = async (req, res) => {
     // On vérifie que le type est bon
     if (
       type !== "Crochet" &&
-      type !== "Point de Croix" &&
+      type !== "Point De Croix" &&
       type !== "Broderie" &&
       type !== "Tricot" &&
-      type !== "Bracelet Brésilien"
+      type !== "Bracelet Brésilien" &&
+      type !== "Couture"
     )
       throw Error("not good type");
 

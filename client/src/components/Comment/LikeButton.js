@@ -47,7 +47,7 @@ const LikeButton = ({ comment, member }) => {
           onClick={unlike}
         />
       )}
-      <span>{comment?.likers.length}</span>
+      <span>{comment.likers.length ?? 0}</span>
     </div>
   );
 };
